@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VENTALUX | Historis Data</title>
+
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/historis.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<!-- SheetJS -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<!-- jsPDF -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<!-- AutoTable -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+<aside class="sidebar">
+
+<div class="sidebar-header">
+
+<img src="img/logo.png">
+
+<h2>VENTALUX</h2>
+
+<p>Smart Monitoring System</p>
+
+</div>
+
+<nav>
+
+<a href="dashboard.html">
+
+<i class="fa-solid fa-house"></i>
+
+Dashboard
+
+</a>
+
+<a href="monitoring.html">
+
+<i class="fa-solid fa-chart-line"></i>
+
+Monitoring
+
+</a>
+
+<a href="kontrol.html">
+
+<i class="fa-solid fa-lightbulb"></i>
+
+    Kontrol
+
+</a>
+
+<a href="historis.html" class="active">
+
+<i class="fa-solid fa-table"></i>
+
+Historis Data
+
+</a>
+
+<a href="memori.html">
+    <i class="fa-solid fa-box-archive"></i>
+    <span>Memori Historis</span>
+</a>
+
+<a href="#" id="logoutButton">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    Logout
+</a>
+
+</nav>
+
+</aside>
+
+<main class="content">
+
+<div class="topbar">
+
+<div>
+
+<h1>Historis Data</h1>
+
+<p>Riwayat hasil monitoring sistem VENTALUX.</p>
+
+</div>
+
+<div class="online">
+
+📡 Internet of Things
+
+</div>
+
+</div>
+
+<div class="chart-section">
+
+<div class="chart-header">
+
+<h2>Data Monitoring</h2>
+
+<div style="display:flex;gap:12px;flex-wrap:wrap;">
+
+<input type="date" id="filterDate">
+
+<input type="text" id="searchData" placeholder="Cari data...">
+<button class="btn-green" id="btnExcel">
+
+<i class="fa-solid fa-file-excel"></i>
+
+Excel
+
+</button>
+
+<button class="btn-red" id="btnPDF">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+PDF
+
+</button>
+
+<button
+    type="button"
+    class="btn-reset"
+    id="btnReset"
+>
+
+<i class="fa-solid fa-trash"></i>
+
+Reset
+
+</button>
+</div>
+
+</div>
+</div>
+
+<!-- GRAFIK TREND HISTORIS -->
+<!-- GRAFIK TREND HISTORIS -->
+<div class="history-trend-card">
+
+    <div class="history-trend-header">
+
+        <div>
+            <h2>
+                <i class="fa-solid fa-chart-line"></i>
+                Trend Data Historis
+            </h2>
+
+            <p>
+                Perubahan parameter monitoring berdasarkan waktu.
+            </p>
+        </div>
+
+        <!-- PILIH PARAMETER -->
+        <div class="history-parameter-select">
+
+            <label for="parameterSelect">
+                Parameter
+            </label>
+
+            <select id="parameterSelect">
+
+    <!-- TURBIN -->
+    <option value="rpm">
+        RPM Turbin
+    </option>
+
+    <option value="wind">
+        Kecepatan Angin (m/s)
+    </option>
+
+    <option value="temperature">
+        Suhu (°C)
+    </option>
+
+    <!-- GENERATOR -->
+    <option value="generatorVoltage">
+        Tegangan Generator (V)
+    </option>
+
+    <option value="generatorCurrent">
+        Arus Generator (mA)
+    </option>
+
+    <option value="generatorPower">
+        Daya Generator (mW)
+    </option>
+
+    <!-- BATERAI -->
+    <option value="voltage">
+        Tegangan Baterai (V)
+    </option>
+
+    <option value="current">
+        Arus Baterai (mA)
+    </option>
+
+    <option value="power">
+        Daya Baterai (mW)
+    </option>
+
+    <option value="battery">
+        Baterai (%)
+    </option>
+
+</select>
+
+        </div>
+
+    </div>
+
+    <!-- GRAFIK -->
+    <div class="history-chart-container">
+        <canvas id="historyChart"></canvas>
+    </div>
+
+</div>
+
+<table class="history-table" id="historyTable">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>Jam</th>
+            <th>RPM</th>
+            <th>Angin</th>
+            <th>Suhu</th>
+
+            <!-- GENERATOR -->
+            <th>Tegangan Generator</th>
+            <th>Arus Generator</th>
+            <th>Daya Generator</th>
+
+            <!-- BATERAI -->
+            <th>Tegangan Baterai</th>
+            <th>Arus Baterai</th>
+            <th>Daya Baterai</th>
+            <th>Baterai</th>
+        </tr>
+    </thead>
+
+<tbody id="historyBody">
+
+</tbody>
+
+</table>
+
+<div class="status-grid">
+
+<div class="status-card">
+<h4>Total Data</h4>
+
+<p id="totalRecord">0 Record</p>
+
+</div>
+
+<div class="status-card">
+
+<h4>Export</h4>
+
+<p class="online-text">
+
+Siap Digunakan
+
+</p>
+
+</div>
+
+<div class="status-card">
+    <h4>Database</h4>
+    <p>
+        Firebase Realtime Database
+    </p>
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+<script type="module" src="js/historis.js"></script>
+
+<script type="module" src="js/auth-guard.js"></script>
+
+<script type="module" src="js/logout.js"></script>
+</body>
+
+</html>

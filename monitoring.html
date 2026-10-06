@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VENTALUX | Monitoring Realtime</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+
+            <img src="img/logo.png" alt="VENTALUX">
+
+            <h2>VENTALUX</h2>
+
+            <p>Smart Monitoring System</p>
+
+        </div>
+
+        <nav>
+
+            <a href="dashboard.html">
+
+                <i class="fa-solid fa-house"></i>
+
+                Dashboard
+
+            </a>
+
+            <a href="monitoring.html" class="active">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                Monitoring
+
+            </a>
+            <a href="kontrol.html">
+
+             <i class="fa-solid fa-lightbulb"></i>
+
+            Kontrol
+            </a>
+
+            <a href="historis.html">
+
+                <i class="fa-solid fa-table"></i>
+
+                Historis Data
+
+            </a>
+            <a href="memori.html">
+                 <i class="fa-solid fa-box-archive"></i>
+                 <span>Memori Historis</span>
+            </a>
+            <a href="#" id="logoutButton">
+            <i class="fa-solid fa-right-from-bracket"></i>
+             Logout
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>Monitoring Realtime</h1>
+
+                <p>Pemantauan kondisi Turbin Ventilator secara realtime.</p>
+
+            </div>
+
+            <div class="online">
+
+                📡 Internet of Things
+
+            </div>
+        </div>
+
+        <!-- CARD SENSOR -->
+
+        <!-- ================= CARD SENSOR ================= -->
+
+<div class="summary">
+
+    <!-- ================= PERFORMA TURBIN ================= -->
+
+    <div class="card">
+        <i class="fa-solid fa-rotate"></i>
+
+        <h4>RPM Turbin</h4>
+
+        <h2 id="rpm">-- RPM</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <div class="card">
+        <i class="fa-solid fa-wind"></i>
+
+        <h4>Kecepatan Angin</h4>
+
+        <h2 id="wind">-- m/s</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <div class="card">
+        <i class="fa-solid fa-temperature-half"></i>
+
+        <h4>Suhu</h4>
+
+        <h2 id="temperature">-- °C</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <!-- ================= OUTPUT GENERATOR ================= -->
+
+    <div class="card">
+        <i class="fa-solid fa-bolt"></i>
+
+        <h4>Tegangan Generator</h4>
+
+        <h2 id="generatorVoltage">-- V</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <div class="card">
+        <i class="fa-solid fa-plug"></i>
+
+        <h4>Arus Generator</h4>
+
+        <h2 id="generatorCurrent">-- mA</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <div class="card">
+        <i class="fa-solid fa-bolt-lightning"></i>
+
+        <h4>Daya Generator</h4>
+
+        <h2 id="generatorPower">-- W</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <!-- ================= BATERAI ================= -->
+
+    <div class="card">
+        <i class="fa-solid fa-bolt-lightning"></i>
+
+        <h4>Tegangan Baterai</h4>
+
+        <h2 id="voltage">-- V</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <div class="card">
+        <i class="fa-solid fa-plug"></i>
+
+        <h4>Arus Baterai</h4>
+
+        <h2 id="current">-- mA</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <div class="card">
+        <i class="fa-solid fa-bolt"></i>
+
+        <h4>Daya Baterai</h4>
+
+        <h2 id="power">-- mW</h2>
+
+        <span>Realtime</span>
+    </div>
+
+
+    <!-- ================= STATUS BATERAI ================= -->
+
+    <div class="card battery-card">
+
+        <i class="fa-solid fa-battery-three-quarters"></i>
+
+        <h4>Status Baterai</h4>
+
+        <h2 id="battery">-- %</h2>
+
+        <div class="battery-bar">
+            <div id="batteryFill"></div>
+        </div>
+
+        <p id="batteryStatus">--</p>
+
+    </div>
+
+</div>
+                <!-- ================= GRAFIK ================= -->
+
+        <div class="chart-section">
+
+            <div class="chart-header">
+
+                <h2>Grafik Monitoring Realtime</h2>
+
+                <select id="chartSelect">
+
+            <!-- PARAMETER TURBIN -->
+                <option value="rpm">RPM Turbin</option>
+                <option value="wind">Kecepatan Angin</option>
+                <option value="temperature">Suhu</option>
+
+             <!-- PARAMETER GENERATOR -->
+                <option value="generatorVoltage">Tegangan Generator</option>
+                <option value="generatorCurrent">Arus Generator</option>
+                <option value="generatorPower">Daya Generator</option>
+
+            <!-- PARAMETER BATERAI -->
+                <option value="voltage">Tegangan Baterai</option>
+                <option value="current">Arus Baterai</option>
+                <option value="power">Daya Baterai</option>
+                <option value="battery">Status Baterai</option>
+
+            </select>
+
+            </div>
+
+            <canvas id="monitorChart"></canvas>
+
+        </div>
+
+        <!-- ================= LOG MONITORING ================= -->
+
+        <div class="chart-section">
+
+            <div class="chart-header">
+
+                <h2>Log Monitoring Realtime</h2>
+
+            </div>
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Waktu</th>
+
+                        <th>Parameter</th>
+
+                        <th>Nilai</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="logTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- ================= STATUS ================= -->
+
+        <div class="status-grid">
+
+            <div class="status-card">
+
+            <h4>ESP32</h4>
+
+            <p>
+
+                ESP32 DevKit V1
+
+             </p>
+
+        </div>
+            <div class="status-card">
+
+            <h4>Cloud Database</h4>
+
+            <p>
+
+                Firebase Realtime Database
+
+             </p>
+
+        </div>
+
+            <div class="status-card">
+
+                <h4>Update Terakhir</h4>
+
+                <p id="lastUpdate">
+
+                    --
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="js/monitoring.js"></script>
+
+<script type="module" src="js/firebase.js"></script>
+
+<script type="module" src="js/auth-guard.js"></script>
+<script type="module" src="js/logout.js"></script>
+</body>
+
+</html>
