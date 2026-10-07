@@ -96,7 +96,7 @@ async function arsipKeMemoriHistoris() {
         // Cari slot memori yang masih kosong
         let slotKosong = null;
 
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 5; i++) {
 
             if (!memori[`memori${i}`]) {
 

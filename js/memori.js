@@ -1,3 +1,4 @@
+
 import { db } from "./firebase.js";
 import {
     ref,
@@ -6,6 +7,8 @@ import {
     remove
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+let SIMULASI_HISTORIS_1 = [];
+let SIMULASI_HISTORIS_2 = [];
 // ========================================
 // VARIABEL UTAMA
 // ========================================
@@ -20,6 +23,25 @@ let namaMemoriAktif = "";
 // ========================================
 
 async function loadMemori() {
+    try {
+
+        const modulSimulasi =
+            await import("./data-memori.js");
+
+        SIMULASI_HISTORIS_1 =
+            modulSimulasi.SIMULASI_HISTORIS_1;
+
+        SIMULASI_HISTORIS_2 =
+            modulSimulasi.SIMULASI_HISTORIS_2;
+
+    } catch (error) {
+
+        console.warn(
+            "Data simulasi lokal belum dapat dimuat:",
+            error
+        );
+
+    }
 
     try {
 
@@ -31,8 +53,26 @@ async function loadMemori() {
             ? snapshot.val()
             : {};
 
+// ========================================
+// MEMORI HISTORIS 4 & 5 - DATA EXCEL
+// ========================================
 
-        for (let i = 1; i <= 3; i++) {
+// Memori 4 = Sheet Historis 1
+semuaMemori.memori4 = {
+    waktuDisimpan: "Dataset Excel Historis 1",
+    totalData: SIMULASI_HISTORIS_1.length,
+    data: SIMULASI_HISTORIS_1,
+    lokal: true
+};
+
+// Memori 5 = Sheet Historis 2
+semuaMemori.memori5 = {
+    waktuDisimpan: "Dataset Excel Historis 2",
+    totalData: SIMULASI_HISTORIS_2.length,
+    data: SIMULASI_HISTORIS_2,
+    lokal: true
+};
+        for (let i = 1; i <= 5; i++) {
 
             const namaMemori = `memori${i}`;
             const memori = semuaMemori[namaMemori];
@@ -86,26 +126,50 @@ async function loadMemori() {
 
 
                 // Format waktu penyimpanan
-                if (memori.waktuDisimpan) {
+if (memori.lokal && memori.data) {
 
-                    const tanggal =
-                        new Date(memori.waktuDisimpan);
+    const dataLokal = Array.isArray(memori.data)
+        ? memori.data
+        : Object.values(memori.data);
 
-                    waktu.textContent =
-                        tanggal.toLocaleString("id-ID");
+    if (dataLokal.length > 0) {
 
-                } else {
+        const dataTerakhir =
+            dataLokal[dataLokal.length - 1];
 
-                    waktu.textContent =
-                        "Waktu tidak tersedia";
+        waktu.textContent =
+            `${dataTerakhir.tanggal} ${dataTerakhir.jam}`;
 
-                }
+    } else {
+
+        waktu.textContent =
+            "Waktu tidak tersedia";
+
+    }
+
+} else if (memori.waktuDisimpan) {
+
+    const tanggal =
+        new Date(memori.waktuDisimpan);
+
+    waktu.textContent =
+        tanggal.toLocaleString("id-ID");
+
+} else {
+
+    waktu.textContent =
+        "Waktu tidak tersedia";
+
+}
 
 
                 // Aktifkan tombol
-                btnLihat.disabled = false;
-                btnDownload.disabled = false;
-                btnHapus.disabled = false;
+btnLihat.disabled = false;
+btnDownload.disabled = false;
+
+// Memori 4 dan 5 adalah data lokal dari Excel
+// sehingga tidak boleh dihapus dari Firebase
+btnHapus.disabled = false;
 
 
                 // Tombol LIHAT
@@ -130,12 +194,12 @@ async function loadMemori() {
                 };
 
 
-                // Tombol HAPUS
-                btnHapus.onclick = () => {
+               // Tombol HAPUS
+btnHapus.onclick = () => {
 
-                    hapusMemori(namaMemori);
+    hapusMemori(namaMemori);
 
-                };
+};
 
             }
 
