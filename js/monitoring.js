@@ -193,6 +193,18 @@ window.updateMonitoring = function(data){
     document.getElementById("generatorPower").textContent =
     data.power_gen + " mW";
     
+
+document.getElementById("effBattery").textContent =
+    data.eff_bat !== undefined && data.eff_bat !== null
+        ? Number(data.eff_bat).toFixed(2) + " %"
+        : "-- %";
+
+document.getElementById("effGenerator").textContent =
+    data.eff_gen !== undefined && data.eff_gen !== null
+        ? Number(data.eff_gen).toFixed(2) + " %"
+        : "-- %";
+
+
     document.getElementById("battery").textContent =
     data.battery + " %";
 
