@@ -9,6 +9,8 @@ import {
 
 let SIMULASI_HISTORIS_1 = [];
 let SIMULASI_HISTORIS_2 = [];
+let SIMULASI_HISTORIS_3 = [];
+let SIMULASI_HISTORIS_4 = [];
 // ========================================
 // VARIABEL UTAMA
 // ========================================
@@ -33,7 +35,11 @@ async function loadMemori() {
 
         SIMULASI_HISTORIS_2 =
             modulSimulasi.SIMULASI_HISTORIS_2;
+SIMULASI_HISTORIS_3 =
+    modulSimulasi.SIMULASI_HISTORIS_3 || [];
 
+SIMULASI_HISTORIS_4 =
+    modulSimulasi.SIMULASI_HISTORIS_4 || [];
     } catch (error) {
 
         console.warn(
@@ -72,7 +78,26 @@ semuaMemori.memori5 = {
     data: SIMULASI_HISTORIS_2,
     lokal: true
 };
-        for (let i = 1; i <= 5; i++) {
+// Memori 6 = Sheet Historis 3
+if (SIMULASI_HISTORIS_3.length > 0) {
+    semuaMemori.memori6 = {
+        waktuDisimpan: "Dataset Excel Historis 3",
+        totalData: SIMULASI_HISTORIS_3.length,
+        data: SIMULASI_HISTORIS_3,
+        lokal: true
+    };
+}
+
+// Memori 7 = Sheet Historis 4
+if (SIMULASI_HISTORIS_4.length > 0) {
+    semuaMemori.memori7 = {
+        waktuDisimpan: "Dataset Excel Historis 4",
+        totalData: SIMULASI_HISTORIS_4.length,
+        data: SIMULASI_HISTORIS_4,
+        lokal: true
+    };
+}
+        for (let i = 1; i <= 7; i++) {
 
             const namaMemori = `memori${i}`;
             const memori = semuaMemori[namaMemori];
