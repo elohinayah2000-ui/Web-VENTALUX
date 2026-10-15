@@ -172,20 +172,21 @@ if (memori.lokal && memori.data) {
 
     }
 
-} else if (memori.waktuDisimpan) {
+                // Format waktu penyimpanan
+                if (i === 6) {
+                    waktu.textContent = "06-10-2026 23:58:56";
+                } else if (memori.waktuDisimpan) {
+                    const tanggal = new Date(memori.waktuDisimpan);
 
-    const tanggal =
-        new Date(memori.waktuDisimpan);
-
-    waktu.textContent =
-        tanggal.toLocaleString("id-ID");
-
-} else {
-
-    waktu.textContent =
-        "Waktu tidak tersedia";
-
+                    waktu.textContent =
+                        !Number.isNaN(tanggal.getTime())
+                            ? tanggal.toLocaleString("id-ID")
+                            : memori.waktuDisimpan;
+                } else {
+                    waktu.textContent = "Waktu tidak tersedia";
+                }
 }
+
 
 
                 // Aktifkan tombol
@@ -290,29 +291,50 @@ function tampilkanMemori(namaMemori, memori) {
 
 
     // Ubah object Firebase menjadi array
-    dataMemoriAktif = Array.isArray(memori.data)
-        ? memori.data
-        : Object.values(memori.data);
+   
 
+dataMemoriAktif = (
+    Array.isArray(memori.data)
+        ? memori.data
+        : Object.values(memori.data)
+).map(item => ({
+    ...item,
+    no: item.no ?? item.No,
+    tanggal: item.tanggal ?? item.Tanggal,
+    jam: item.jam ?? item.Jam,
+    rpm: item.rpm ?? item.RPM,
+    wind: item.wind ?? item["Kecepatan Angin (m/s)"],
+    temperature: item.temperature ?? item["Suhu (°C)"],
+    voltage_gen: item.voltage_gen ?? item["Tegangan Generator (V)"],
+    current_gen: item.current_gen ?? item["Arus Generator (mA)"],
+    power_gen: item.power_gen ?? item["Daya Generator (mW)"],
+    voltage_bat: item.voltage_bat ?? item["Tegangan Baterai (V)"],
+    current_bat: item.current_bat ?? item["Arus Baterai (mA)"],
+    power_bat: item.power_bat ?? item["Daya Baterai (mW)"],
+    battery: item.battery ?? item["Baterai (%)"]
+}));
+
+console.log("Nama memori:", namaMemori);
+console.log("Total data:", dataMemoriAktif.length);
+console.log("Contoh data:", dataMemoriAktif.slice(0, 3));
     namaMemoriAktif = namaMemori;
 
 
+   
     // Urutkan dari lama ke terbaru
     dataMemoriAktif.sort((a, b) => {
+        const tanggalA = a?.tanggal || "1970-01-01";
+        const tanggalB = b?.tanggal || "1970-01-01";
 
-        const waktuA =
-            new Date(
-                `${a.tanggal} ${a.jam.replace(/-/g, ":")}`
-            );
+        const jamA = (a?.jam || "00:00:00").replace(/-/g, ":");
+        const jamB = (b?.jam || "00:00:00").replace(/-/g, ":");
 
-        const waktuB =
-            new Date(
-                `${b.tanggal} ${b.jam.replace(/-/g, ":")}`
-            );
+        const waktuA = new Date(`${tanggalA}T${jamA}`);
+        const waktuB = new Date(`${tanggalB}T${jamB}`);
 
         return waktuA - waktuB;
-
     });
+
 
 
     // Judul detail
